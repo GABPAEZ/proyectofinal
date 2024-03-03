@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 import { Schema } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const userSchema = new Schema({
   name: {
@@ -46,6 +47,29 @@ const userSchema = new Schema({
   },
   opt: Number,
   opt_exp: Date,
+});
+
+//Previo a guardar en la bbdd hash el password
+
+userSchema.pre('save', async function () {
+  const temp = await bcrypt.hash(this.password, 10);
+  this.password = temp;
+});
+
+//Metodo para comparar los password con el nombre comparePassword
+
+userSchema.methods.comparePassword = async function (passwordEntered) {
+  return await bcrypt.compare(passwordEntered, this.password);
+};
+
+
+//paso a miniscula el correo por si escriben con mayusculas
+
+userSchema.pre('save', function (next) {
+  if (this.email) {
+    this.email = this.email.toLowerCase();
+  }
+  next();
 });
 
 export const User = mongoose.model('User', userSchema);
