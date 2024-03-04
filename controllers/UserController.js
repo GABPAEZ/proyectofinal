@@ -29,6 +29,9 @@ export const login = async (req, res, next) => {
   res
     .status(200)
     .cookie('token', access_token, {
+      secure: process.env.NODE_ENV === 'Development' ? false : true,
+      httpOnly: process.env.NODE_ENV === 'Development' ? false : true,
+      sameSite: process.env.NODE_ENV === 'Development' ? false : 'none',
       expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
     })
     .json({
@@ -62,7 +65,29 @@ export const signup = async (req, res, next) => {
   }
 };
 
-
-
 //==================================== Mi PERFIL ===================================================//
 
+export const getMyProfile = async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  res.status(200).json({
+    success: true,
+    user,
+  });
+};
+
+//==================================== LOGOUT ===================================================//
+
+export const logOut = async (req, res, next) => {
+  res
+    .status(200)
+    .cookie('token', '', {
+      secure: process.env.NODE_ENV === 'Development' ? false : true,
+      httpOnly: process.env.NODE_ENV === 'Development' ? false : true,
+      sameSite: process.env.NODE_ENV === 'Development' ? false : 'none',
+      expires: new Date(Date.now()),
+    })
+    .json({
+      success: true,
+      message: 'Ha salido del sistema',
+    });
+};
