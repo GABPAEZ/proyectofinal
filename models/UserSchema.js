@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const userSchema = new Schema({
   name: {
@@ -62,6 +63,13 @@ userSchema.methods.comparePassword = async function (passwordEntered) {
   return await bcrypt.compare(passwordEntered, this.password);
 };
 
+// funcion para generar el token de 30 minutos(1800s) 2d 2 dias
+
+userSchema.methods.generateToken =  function () {
+  return  jwt.sign({ _id: this._id }, process.env.SECRET_JWT, {
+    expiresIn: '2d',
+  });
+};
 
 //paso a miniscula el correo por si escriben con mayusculas
 
