@@ -1,6 +1,6 @@
 import express from 'express';
 import { User } from '../models/UserSchema.js';
-import cookie from 'cookie-parser';
+import { ErrorHandler } from '../utils/ErrorHandler.js';
 
 //==================================== LOGIN ===================================================//
 
@@ -12,20 +12,14 @@ export const login = async (req, res, next) => {
   const user = await User.findOne({ email: emailLower }).select('+password');
 
   if (!user) {
-    return res.status(400).json({
-      success: false,
-      message: 'Correo electrónico no encontrado',
-    });
+    return next(new ErrorHandler('Correo electrónico no encontrado', 400));
   }
   // si pasa y encuentra el email verifico el pass
 
   const isMatched = await user.comparePassword(password);
 
   if (!isMatched) {
-    return res.status(400).json({
-      success: false,
-      message: 'Password incorrecto!',
-    });
+    return next(new ErrorHandler('El password es incorrecto', 400));
   }
 
   // si todo sale bien responde y envia el token y la guarda en la cookie del usuaio por 7 dias
@@ -62,15 +56,13 @@ export const signup = async (req, res, next) => {
       zipCode,
     });
 
-    res.status(201).json({
-      success: true,
-      message: 'Usuario registrado con exito',
-    });
+    next(new ErrorHandler('Usuario registrado con exito', 201));
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: 'El correo se encuentra registrado',
-      
-    });
+    next(new ErrorHandler('El correo se encuentra registrado', 400));
   }
 };
+
+
+
+//==================================== Mi PERFIL ===================================================//
+
