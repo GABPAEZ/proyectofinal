@@ -4,9 +4,11 @@ import userRouter from './routes/UserRoute.js';
 import { errorMiddleware } from './middlewares/error.js';
 import cookieparser from 'cookie-parser'
 
+
 config({
   path: './data/config.env',
 });
+
 
 export const app = express();
 

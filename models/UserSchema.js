@@ -46,13 +46,14 @@ const userSchema = new Schema({
     public_id: String,
     url: String,
   },
-  opt: Number,
+  opt: Number, //One-Time Password Numero unico para solicitar al resetear la password
   opt_exp: Date,
 });
 
 //Previo a guardar en la bbdd hash el password
 
-userSchema.pre('save', async function () {
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
   const temp = await bcrypt.hash(this.password, 10);
   this.password = temp;
 });
@@ -65,8 +66,8 @@ userSchema.methods.comparePassword = async function (passwordEntered) {
 
 // funcion para generar el token de 30 minutos(1800s) 2d 2 dias
 
-userSchema.methods.generateToken =  function () {
-  return  jwt.sign({ _id: this._id }, process.env.SECRET_JWT, {
+userSchema.methods.generateToken = function () {
+  return jwt.sign({ _id: this._id }, process.env.SECRET_JWT, {
     expiresIn: '2d',
   });
 };
