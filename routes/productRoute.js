@@ -3,10 +3,13 @@ import express from 'express';
 import { isAuthenticated } from '../middlewares/auth.js';
 import { singleUpload } from '../middlewares/multer.js';
 import {
+  addCategory,
   addProductImage,
   createProduct,
+  deleteCategory,
   deleteProduct,
   deleteProductImage,
+  getAllCategories,
   getAllProducts,
   getProducDetails,
   updateProduct,
@@ -27,5 +30,9 @@ productRouter
   .route('/images/:id')
   .post(isAuthenticated, singleUpload, addProductImage)
   .delete(isAuthenticated, deleteProductImage);
+
+productRouter.post('/category', isAuthenticated, addCategory);
+productRouter.get('/categories', isAuthenticated, getAllCategories);
+productRouter.delete('/category/:id', isAuthenticated, deleteCategory);
 
 export default productRouter;

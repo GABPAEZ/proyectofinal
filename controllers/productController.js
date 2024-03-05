@@ -1,6 +1,7 @@
 //import { asyncError} from '../middleware.error.js'
 import { asyncError } from '../middlewares/error.js';
 import { Product } from '../models/ProductSchema.js';
+import { Category } from '../models/categorySchema.js';
 import { ErrorHandler } from '../utils/ErrorHandler.js';
 import { getDataUri, sendEmail } from '../utils/features.js';
 import cloudinary from 'cloudinary';
@@ -154,5 +155,53 @@ export const deleteProduct = asyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: 'Producto borrado exitosamente',
+  });
+});
+
+//====================== crear categoria ==============================//
+
+export const addCategory = asyncError(async (req, res, next) => {
+  const { category } = req.body;
+
+  await Category.create({ category });
+
+  res.status(200).json({
+    success: true,
+    message: 'Categoria creada exitosamente',
+  });
+});
+
+//====================== traer todas las categorias ==============================//
+
+export const getAllCategories = asyncError(async (req, res, next) => {
+  const categories = await Category.find({});
+
+  res.status(200).json({
+    success: true,
+    categories,
+  });
+});
+
+//====================== borrar  categorias ==============================//
+
+export const deleteCategory = asyncError(async (req, res, next) => {
+  const category = await Category.findById(req.params.id);
+  if (!category) return next(new ErrorHandler('Categoria no encontrada', 404));
+
+  //buscar todos los productos que estan en la categoria para limpiar antes de eliminar
+
+  const products = await Category.find({ category: category._id });
+
+  for (let index = 0; index < products.length; index++) {
+    const product = products[index];
+    product.category = undefined;
+    await product.save();
+  }
+
+  await category.deleteOne();
+
+  res.status(200).json({
+    success: true,
+    message: 'Categoria borrada exitosamente',
   });
 });
