@@ -8,7 +8,28 @@ import cloudinary from 'cloudinary';
 
 export const getAllProducts = async (req, res, next) => {
   //buscar y query una categoria
-  const products = await Product.find({});
+
+  const { keyword, category } = req.query;
+
+  const products = await Product.find({
+    name: {
+      $regex: keyword ? keyword : '',
+      $options: 'i',
+    },
+    category: category ? category : undefined,
+  });
+
+  res.status(200).json({
+    success: true,
+    products,
+  });
+};
+
+//=============== Get Admin Products ================//
+
+export const getAdminProducts = async (req, res, next) => {
+  //buscar y query una categoria
+  const products = await Product.find({}).populate('category');
 
   res.status(200).json({
     success: true,
@@ -19,7 +40,7 @@ export const getAllProducts = async (req, res, next) => {
 //=================== Un Producto ==================//
 
 export const getProducDetails = asyncError(async (req, res, next) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id).populate('category');
 
   if (!product) return next(new ErrorHandler('Producto no encontrado', 404));
 
@@ -66,11 +87,12 @@ export const createProduct = asyncError(async (req, res, next) => {
 export const updateProduct = asyncError(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (!product) return next(new ErrorHandler('Producto no encontrado', 404));
-  const { name, description, price, stock } = req.body;
+  const { name, description, price, stock, category } = req.body;
   if (name) product.name = name;
   if (description) product.description = description;
   if (price) product.price = price;
   if (stock) product.stock = stock;
+  if (category) product.category = category;
 
   await product.save();
 

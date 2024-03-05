@@ -2,6 +2,8 @@ import { config } from 'dotenv';
 import express from 'express';
 import userRouter from './routes/UserRoute.js';
 import productRouter from './routes/productRoute.js';
+import orderRouter from './routes/orderRoute.js';
+
 import { errorMiddleware } from './middlewares/error.js';
 import cookieparser from 'cookie-parser';
 
@@ -25,6 +27,7 @@ app.get('/', (req, res, next) => {
 //relacionadas al usuario, login, registro
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/product', productRouter);
+app.use('/api/v1/order', orderRouter);
 
 //error middleware
 
