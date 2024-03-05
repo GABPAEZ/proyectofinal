@@ -173,7 +173,7 @@ export const changePassword = async (req, res, next) => {
   });
 };
 
-//==================================== Mi AVATAR ===================================================//
+//==================================== Actualizar AVATAR ===================================================//
 
 export const updatePic = async (req, res, next) => {
   const user = await User.findById(req.user._id);

@@ -1,6 +1,6 @@
-import moongose from 'moongose';
-import { Schema } from 'moongose';
+import mongoose from 'mongoose';
+import { Schema } from mongoose;
 
 const orderSchema = new Schema({});
 
-export default Order = moongose.model('Order', orderSchema);
+export default Order = mongoose.model('Order', orderSchema);
