@@ -1,6 +1,7 @@
 import { asyncError } from '../middlewares/error.js';
 import { Order } from '../models/orderSchema.js';
 import { Product } from '../models/ProductSchema.js';
+import { ErrorHandler } from '../utils/ErrorHandler.js';
 
 //========================= Crear una Orden ==========================//
 
@@ -39,5 +40,60 @@ export const createOrder = asyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: 'Order colocada, gracias!!',
+  });
+});
+
+//========================== todas la ordenes =======================================/
+
+export const getAdminOrders = asyncError(async (req, res, next) => {
+  const orders = await Order.find({});
+
+  res.status(200).json({
+    success: true,
+    orders,
+  });
+});
+
+//=========================== mis ordenes ============================================//
+
+export const getMyOrders = asyncError(async (req, res, next) => {
+  const myorders = await Order.find({ user: req.user._id });
+
+  res.status(200).json({
+    success: true,
+    myorders,
+  });
+});
+
+//=========================== mis ordenes ============================================//
+
+export const getOrderDetails = asyncError(async (req, res, next) => {
+  const order = await Order.findById(req.params.id);
+
+  if (!order) return next(new ErrorHandler('Orden no encontrada', 404));
+  res.status(200).json({
+    success: true,
+    order,
+  });
+});
+
+//=========================== update ordenes ============================================//
+
+export const processOrders = asyncError(async (req, res, next) => {
+  const order = await Order.findById(req.params.id);
+
+  if (!order) return next(new ErrorHandler('Orden no encontrada', 404));
+
+  if (order.orderStatus === 'Preparing') order.orderStatus = 'Shipped';
+  else if (order.orderStatus === 'Shipped') {
+    order.orderStatus = 'Delivered';
+    order.deliveredAt = new Date(Date.now());
+  } else return next(new ErrorHandler('Orden ya despachada', 400));
+
+  await order.save();
+  //localhost:5000/api/v1/order/single/65e7649a1dd7e7fd916a46a0
+  http: res.status(200).json({
+    success: true,
+    message: 'Orden procesada en forma exitosa',
   });
 });
