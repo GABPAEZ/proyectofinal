@@ -2,6 +2,21 @@ import { asyncError } from '../middlewares/error.js';
 import { Order } from '../models/orderSchema.js';
 import { Product } from '../models/ProductSchema.js';
 import { ErrorHandler } from '../utils/ErrorHandler.js';
+import { stripe } from '../server.js';
+
+//=========================sTRIPE =================================//
+
+export const processPayment = asyncError(async (req, res, next) => {
+  const { totalAmount } = req.body;
+  const { client_secret } = await stripe.paymentIntents.create({
+    amount: Number(totalAmount),
+    currency: 'usd',
+  });
+  res.status(200).json({
+    success: true,
+    client_secret,
+  });
+});
 
 //========================= Crear una Orden ==========================//
 
