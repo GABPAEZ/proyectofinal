@@ -1,6 +1,6 @@
 import { asyncError } from '../middlewares/error.js';
-import { Order } from '../models/orderSchema.js';
-import { Product } from '../models/productSchema.js';
+import { Order } from '../models/order.js';
+import { Product } from '../models/product.js';
 import { ErrorHandler } from '../utils/ErrorHandler.js';
 import { stripe } from '../server.js';
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { User } from '../models/userSchema.js';
+import { User } from '../models/user.js';
 import { ErrorHandler } from '../utils/ErrorHandler.js';
 import { getDataUri, sendEmail } from '../utils/features.js';
 import cloudinary from 'cloudinary';
