@@ -1,4 +1,4 @@
-import { User } from '../models/UserSchema.js';
+import { User } from '../models/userSchema.js';
 import { ErrorHandler } from '../utils/ErrorHandler.js';
 import jwt from 'jsonwebtoken';
 import { asyncError } from './error.js';
