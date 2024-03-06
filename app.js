@@ -1,8 +1,8 @@
 import { config } from 'dotenv';
 import express from 'express';
-import userRouter from './routes/userRoute.js';
-import productRouter from './routes/productRoute.js';
-import orderRouter from './routes/orderRoute.js';
+import userRouter from './routes/user.js';
+import productRouter from './routes/product.js';
+import orderRouter from './routes/order.js';
 
 import { errorMiddleware } from './middlewares/error.js';
 import cookieparser from 'cookie-parser';
@@ -23,7 +23,7 @@ app.use(
     credential: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     //origin: '*',
-    origin:[process.env.FRONTEND_URI_1, process.env.FRONTEND_URI_2]
+    origin: [process.env.FRONTEND_URI_1, process.env.FRONTEND_URI_2],
   })
 );
 
