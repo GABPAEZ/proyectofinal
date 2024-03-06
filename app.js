@@ -6,6 +6,7 @@ import orderRouter from './routes/orderRoute.js';
 
 import { errorMiddleware } from './middlewares/error.js';
 import cookieparser from 'cookie-parser';
+import cors from 'cors';
 
 config({
   path: './data/config.env',
@@ -17,6 +18,14 @@ export const app = express();
 
 app.use(express.json());
 app.use(cookieparser());
+app.use(
+  cors({
+    credential: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    //origin: '*',
+    origin:[process.env.FRONTEND_URI_1, process.env.FRONTEND_URI_2]
+  })
+);
 
 //rutas
 
