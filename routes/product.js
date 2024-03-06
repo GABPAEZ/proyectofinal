@@ -14,7 +14,7 @@ import {
   getAllProducts,
   getProducDetails,
   updateProduct,
-} from '../controllers/productController.js';
+} from '../controllers/product.js';
 
 const productRouter = express.Router();
 

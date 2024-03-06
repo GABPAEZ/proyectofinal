@@ -1,7 +1,7 @@
 //import { asyncError} from '../middleware.error.js'
 import { asyncError } from '../middlewares/error.js';
-import { Product } from '../models/productSchema.js';
-import { Category } from '../models/categorySchema.js';
+import { Product } from '../models/product.js';
+import { Category } from '../models/category.js';
 import { ErrorHandler } from '../utils/ErrorHandler.js';
 import { getDataUri, sendEmail } from '../utils/features.js';
 import cloudinary from 'cloudinary';

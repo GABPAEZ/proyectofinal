@@ -9,7 +9,7 @@ import {
   signup,
   updatePic,
   updateProfile,
-} from '../controllers/UserController.js';
+} from '../controllers/user.js';
 import { isAuthenticated } from '../middlewares/auth.js';
 import { singleUpload } from '../middlewares/multer.js';
 
